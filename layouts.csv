@@ -1,0 +1,24 @@
+# Layouts file which configures the cloning of SVN repositories into Git
+# repositories.
+#
+# This is a CSV file with three fields:
+#  1. The SVN repository name (not full URL)
+#  2. The Git repository name
+#  3. The arguments to git svn other than the --authors-file argument
+#
+# There may be one line with both fields 1 and 2 blank, this represents the
+# default argument set for SVN repositores not listed in this file, these
+# repositories will be cloned to git repositories having the same name. Other
+# than this default layout line, field one must not be empty
+#
+# If field two (the git repository name) is empty, the git repository will be
+# given the same name as the SVN repository from which it is cloned.
+#
+# If field three (the layout arguments) is empty, no action will be taken for.
+# the repository (git svn clone will not be executed). This is a valid option
+# for the default line as well.
+#
+# git svn commands are built using this file in the following pattern:
+#     git svn clone --authors-file=[authors file] $3 [SVN Base URL]/$1 $2
+# 
+,,--stdlayout
