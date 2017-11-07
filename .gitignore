@@ -1,2 +1,6 @@
 .cifs-auth
 svn-migration-scripts.jar
+backup
+work
+authors-working
+ad-dump.csv
