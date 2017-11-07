@@ -9,6 +9,8 @@ else
   adUsers=$1
 fi
 
+domain=ZEPOWER
+
 rm -rf work/authors
 mkdir -p work/authors
 
@@ -17,7 +19,7 @@ do
   name=$(basename $repo)
   url="file://$PWD/$repo"
   java -jar svn-migration-scripts.jar authors $url | \
-      sed 's/ZEPOWER\\//g' | \
+      sed "s/$domain\\\\//g" | \
       awk '{print tolower($1)}' | \
       sort | uniq > work/authors/authors.$name.txt
 done
@@ -40,5 +42,8 @@ else
 (rm work/authors.txt || true) 2> /dev/null
 while IFS= read -r line; do
   userInfo=$(grep "^$line," $allUsers | awk -F , '{print $2}' || echo "$line <$line@ze.com>")
-  echo "$line = $userInfo" >> work/authors.txt
+  echo "$line = $userInfo" >> work/authors/authors-no-domain.txt
 done < $allAuthors
+
+cp work/authors/authors-no-domain.txt work/authors.txt
+sed -e "s/^/$domain\\\\/" work/authors/authors-no-domain.txt >> work/authors.txt
