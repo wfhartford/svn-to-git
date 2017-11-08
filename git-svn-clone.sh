@@ -15,8 +15,8 @@ then
   exit 2
 fi
 
-rm -rf work/git
-mkdir work/git
+rm -rf work/git work/git-bare
+mkdir work/git work/git-bare
 
 defaultLayout=$(grep "^,," $layoutsFile)
 echo "Default Layout: $defaultLayout"
@@ -67,6 +67,7 @@ do
             fi
           fi
         )
+        ln -s ../git/$gitRepo/.git work/git-bare/$gitRepo
       fi
     fi
   done
