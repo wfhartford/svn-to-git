@@ -20,7 +20,7 @@ do
   url="file://$PWD/$repo"
   java -jar svn-migration-scripts.jar authors $url | \
       sed "s/$domain\\\\//g" | \
-      awk '{print tolower($1)}' | \
+      awk '{print $1}' | \
       sort | uniq > work/authors/authors.$name.txt
 done
 
@@ -34,14 +34,14 @@ if ($6 && $3)
 else if ($3)
   print tolower($4)","$3" <"tolower($4)"@ze.com>";
 else if ($6)
-  print tolower($4)","$4" <"tolower($6)">";
+  print tolower($4)","tolower($4)" <"tolower($6)">";
 else 
-  print tolower($4)","$4" <"tolower($4)"@ze.com>";
+  print tolower($4)","tolower($4)" <"tolower($4)"@ze.com>";
 }' > $allUsers
 
 (rm work/authors.txt || true) 2> /dev/null
 while IFS= read -r line; do
-  userInfo=$(grep "^$line," $allUsers | awk -F , '{print $2}' || echo "$line <$line@ze.com>")
+  userInfo=$(grep -i "^$line," $allUsers | awk -F , '{print $2}' || echo "$line <$line@ze.com>" | tr '[:upper:]' '[:lower:]')
   echo "$line = $userInfo" >> work/authors/authors-no-domain.txt
 done < $allAuthors
 
