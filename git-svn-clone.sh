@@ -21,6 +21,18 @@ mkdir work/git
 defaultLayout=$(grep "^,," $layoutsFile)
 echo "Default Layout: $defaultLayout"
 
+originalGcValue=$(git config --global --get gc.auto || echo 'unset')
+git config --global gc.auto 0
+function cleanup {
+  if [ 'unset' == $originalGcValue ]
+  then 
+    git config --global --unset gc.auto
+  else
+    git config --global gc.auto $originalGcValue
+  fi
+}
+trap cleanup EXIT
+
 for repo in work/svn/repos/*
 do
   name=$(basename $repo)
@@ -40,6 +52,21 @@ do
       then
         echo "Cloning SVN repo $name to Git repo $gitRepo with arguments $arguments"
         eval git svn clone --authors-file=work/authors.txt $arguments $url work/git/$gitRepo
+        (
+          cd work/git/$gitRepo
+          if java -Dfile.encoding=utf-8 -jar ../../../svn-migration-scripts.jar clean-git --force --prefix=origin/
+          then
+            echo "Unexpected clean-git exit code of 0"
+            exit 1
+          else
+            exitCode=$?
+            if [ ! $exitCode -eq 1 ]
+            then
+              echo "Unexpected clean-git exit code of $exitCode"
+              exit 1
+            fi
+          fi
+        )
       fi
     fi
   done
