@@ -18,7 +18,21 @@ do
   cp $backup $TEMP
   mkdir -p $destination
   echo "Extracting $file to $destination"
-  (tar xf $TEMP/$file -C $destination && rm $destination/hooks/* $destination/locks/* $destination/conf/* && rm $TEMP/$file && chmod -R -w $destination && echo "Finished extracting $file") &
+  (
+    tar xf $TEMP/$file -C $destination
+    rm $destination/hooks/* $destination/locks/* $destination/conf/*
+    rm $TEMP/$file
+    (
+      svnadmin lslocks $destination | \
+          grep -B2 Owner | \
+          grep Path | \
+          sed "s/Path: \///" | \
+          tr "\n" "\0" | \
+          xargs -r0 svnadmin rmlocks $destination > /dev/null
+    ) || true
+    chmod -R -w $destination
+    echo "Finished extracting $file"
+  ) &
 done
 
 echo "Waiting for extraction to complete"
