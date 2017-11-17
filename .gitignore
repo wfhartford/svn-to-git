@@ -5,3 +5,9 @@ ad-dump.csv
 local-backup
 svn-all-fast-export
 svn-migration-scripts.jar
+svn
+rules
+authors.txt
+logs
+repo
+log-repo_*
