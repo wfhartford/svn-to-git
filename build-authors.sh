@@ -47,3 +47,4 @@ done < $allAuthors
 
 cp work/authors/authors-no-domain.txt work/authors.txt
 sed -e "s/^/$domain\\\\/" work/authors/authors-no-domain.txt >> work/authors.txt
+echo "(no author) = unknown <unknown@ze.com>" >> work/authors.txt
