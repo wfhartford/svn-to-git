@@ -3,3 +3,5 @@
 work
 ad-dump.csv
 local-backup
+svn-all-fast-export
+svn-migration-scripts.jar
