@@ -14,7 +14,7 @@ domain=ZEPOWER
 rm -rf work/authors
 mkdir -p work/authors
 
-for repo in work/svn/repos/*
+for repo in svn/*
 do
   name=$(basename $repo)
   url="file://$PWD/$repo"

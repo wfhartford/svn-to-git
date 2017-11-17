@@ -1,8 +1,5 @@
 .cifs-auth
 .idea
-svn-migration-scripts.jar
-backup
 work
-authors-working
 ad-dump.csv
 local-backup
