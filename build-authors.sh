@@ -39,12 +39,12 @@ else
   print tolower($4)","tolower($4)" <"tolower($4)"@ze.com>";
 }' > $allUsers
 
-(rm work/authors.txt || true) 2> /dev/null
+(rm authors.txt || true) 2> /dev/null
 while IFS= read -r line; do
   userInfo=$(grep -i "^$line," $allUsers | awk -F , '{print $2}' || echo "$line <$line@ze.com>" | tr '[:upper:]' '[:lower:]')
   echo "$line = $userInfo" >> work/authors/authors-no-domain.txt
 done < $allAuthors
 
-cp work/authors/authors-no-domain.txt work/authors.txt
-sed -e "s/^/$domain\\\\/" work/authors/authors-no-domain.txt >> work/authors.txt
-echo "(no author) = unknown <unknown@ze.com>" >> work/authors.txt
+cp work/authors/authors-no-domain.txt authors.txt
+sed -e "s/^/$domain\\\\/" work/authors/authors-no-domain.txt >> authors.txt
+echo "(no author) = unknown <unknown@ze.com>" >> authors.txt
