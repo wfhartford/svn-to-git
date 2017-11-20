@@ -2,6 +2,13 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+if [ $# -ne 2 ]
+then
+  echo "Two arguments are required:"
+  echo "  $0 <SVN repo location> <rules file>"
+  exit 1
+fi
+
 SVN=$1
 RULES_FILE=$2
 TIME=$(date -u +%Y%m%d%H%M%S)
