@@ -46,3 +46,21 @@ which requires a fair amount of configuration in rules files. See the
 documentation and examples in their repository for details. For complex SVN
 histories, these rules can be slow and tedious to build, I don't have any
 further advice to offer here.
+
+I recommend creating a rules file for each Git repo to be generated. If many
+Git repositories are going to be built from one SVN repository, those rules
+files should be included by one main rules file using the `include` directive.
+
+## Migration
+Once the rules file(s) have been written, the import/export process can be
+started using the `transport.sh` script:
+```bash
+./transport.sh [SVN repository location] [rules file]
+```
+Depending on many factors, this may take just a few seconds or significantly
+more, the larger repositories I've been working with take several hours.
+
+Once the transport script completes successfully, you will have your Git
+repositories built. Take a close look at the repositories and their history,
+figure out what's wrong, adjust the rules files accordingly and do it all
+again.
