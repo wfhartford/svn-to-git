@@ -25,20 +25,26 @@ function listRepos {
 
 listRepos $RULES_FILE
 unique_repos=($(tr ' ' '\n' <<< "${repos[@]}" | sort -u))
-#echo "Found Repositories:"
-#for repo in "${unique_repos[@]}"
-#do
-#  echo " - $repo"
-#done
-#exit 0
+
+cp $RULES_FILE $RULES_FILE.tmp
+cat >> $RULES_FILE.tmp << EOF
+# Must be at end to permit skipping revisions; if you intend for ALL revisions to be handled, this should be removed.
+match /
+end match
+EOF
+
+function cleanup {
+  rm $RULES_FILE.tmp
+}
+trap cleanup EXIT
 
 if [ ! -d logs ]
 then
- mkdir logs
+  mkdir logs
 fi
 
 echo "Transporting SVN repo $SVN"
-eval "./svn-all-fast-export --identity-map authors.txt --add-metadata --add-metadata-notes --stats --rules $RULES_FILE $SVN" \
+eval "./svn-all-fast-export --identity-map authors.txt --add-metadata --add-metadata-notes --stats --rules $RULES_FILE.tmp $SVN" \
     > logs/$(basename $SVN)-$TIME-transport.log \
     2> logs/$(basename $SVN)-$TIME-transport.err
 for repo in "${unique_repos[@]}"
@@ -47,7 +53,8 @@ do
   (
     cd $repo
     git tag -l | (grep backups/ || true) | xargs -r git tag -d
-    git gc
+    git reflog expire --expire=now --all
+    git gc --prune=now
     git repack -a -d -f
   ) > logs/$(basename $repo)-$TIME-tidy.log \
    2> logs/$(basename $repo)-$TIME-tidy.err
