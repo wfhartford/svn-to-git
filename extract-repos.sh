@@ -5,7 +5,7 @@ IFS=$'\n\t'
 source=local-backup
 if [ ! -e $source ]
 then
-  echo "First create a local-backup directory or symlink containing hotcopy backups"
+  echo "First create a $source directory or symlink containing hotcopy backups"
   exit 1
 fi
 
