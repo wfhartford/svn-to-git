@@ -2,6 +2,11 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+if [ ! -d logs ]
+then
+  mkdir logs
+fi
+
 limit=$(nproc)
 function limitBg {
   while [ $(jobs | wc -l) -ge $limit ]
