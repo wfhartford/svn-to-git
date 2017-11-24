@@ -51,6 +51,26 @@ I recommend creating a rules file for each Git repo to be generated. If many
 Git repositories are going to be built from one SVN repository, those rules
 files should be included by one main rules file using the `include` directive.
 
+In order to use the `transport-all.sh` script, rules should be organised as
+follows:
+* Parent directory named `rules` in the top level working copy directory,
+* Sub-directories having the same name as the SVN repository,
+* Rules files in the sub-directories named `main.rules`,
+* If many rules files are needed, they should all be included in `main.rules`.
+
+In order to use the included Bitbucket scripts, all repositories should be
+created in a directory named `repo`. This can be accomplished simply by
+prefixing the repository name with `repo/`, for example:
+```
+create repository repo/name
+end repository
+
+match /trunk/
+ repository repo/name
+ branch master
+end match
+```
+
 ## Migration
 Once the rules file(s) have been written, the import/export process can be
 started using the `transport.sh` script:
@@ -64,3 +84,23 @@ Once the transport script completes successfully, you will have your Git
 repositories built. Take a close look at the repositories and their history,
 figure out what's wrong, adjust the rules files accordingly and do it all
 again.
+
+If many Subversion repositores are being migrated, and the rules files are laid
+out as described in the previous section, the `transport-all.sh` script can be
+used to perform many migrations concurrently.
+
+## Bitbucket upload
+We've decided to host our source repositories on Bitbucket Server (aka. Stash).
+To that end, this repository includes a couple scripts which perform actions in
+Bitbucket Server:
+* `bitbucket-conf.sh` - Exports variables used by other Bitbucket scripts,
+modify this script to define the server location, and project name. This script
+assumes the existence of a file named `.bitbucket-token` which must contain a
+personal access token. This token can be obtained from Bitbucket server and
+must provide project admin rights on the project to which the Git repositories
+will be uploaded.
+* `bitbucket-upload.sh` - Uploads all git repos in the `repo` directory to the
+configured project in the configured Bitbucket server.
+* `bitbucket-delete-all-repositories.sh` - *WARNING* - Permenently deletes all
+repositories from the configured Bitbucket project and server with names
+matching the files and directories in the `repo` directory.
