@@ -52,7 +52,6 @@ do
   echo "Tidying GIT repo $repo; currently $(du -hs $repo | awk {'print $1'})"
   (
     cd $repo
-    git tag -l | (grep backups/ || true) | xargs -r git tag -d
     git reflog expire --expire=now --all
     git gc --prune=now
     git repack -a -d -f
