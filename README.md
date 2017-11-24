@@ -58,6 +58,15 @@ follows:
 * Rules files in the sub-directories named `main.rules`,
 * If many rules files are needed, they should all be included in `main.rules`.
 
+I've found that it works well to use multiple rules files for any Subversion
+repository which will be migrated to more than one Git repository, using one
+rules file for each Git repository.
+
+In order for the `transport.sh` script to work correctly, rules files should
+not make use of variables for repository names. This script scans rules files
+looking for repository names, then uses those repository names when it tidys
+the repositories.
+
 In order to use the included Bitbucket scripts, all repositories should be
 created in a directory named `repo`. This can be accomplished simply by
 prefixing the repository name with `repo/`, for example:
