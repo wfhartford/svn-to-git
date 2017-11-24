@@ -2,10 +2,9 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+source ./bitbucket-conf.sh
+
 time=$(date -u +%Y%m%d%H%M%S)
-token=$(<.bitbucket-token)
-base=http://zema-dev-01:7990
-project=IMP
 
 limit=$(nproc)
 function limitBg {
